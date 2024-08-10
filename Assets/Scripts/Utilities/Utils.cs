@@ -24,4 +24,22 @@ public class Utils
 
         return result;
     }
+
+    public static FishItem.eFishType GetRandomFishTypeExcept(FishItem.eFishType[] types)
+    {
+        List<FishItem.eFishType> list = Enum.GetValues(typeof(FishItem.eFishType)).Cast<FishItem.eFishType>().Except(types).ToList();
+
+        int rnd = URandom.Range(0, list.Count);
+        FishItem.eFishType result = list[rnd];
+
+        return result;
+    }
+
+    public static FishItem.eFishType GetRandomFishType()
+    {
+        Array values = Enum.GetValues(typeof(FishItem.eFishType));
+        FishItem.eFishType result = (FishItem.eFishType)values.GetValue(URandom.Range(0, values.Length));
+
+        return result;
+    }
 }

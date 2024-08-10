@@ -6,6 +6,10 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public ConfigScrtbObj ScriptableObject;
+
+    public bool isNormaal = true;
+
     public event Action<eStateGame> StateChangedAction = delegate { };
 
     public enum eLevelMode
@@ -37,7 +41,6 @@ public class GameManager : MonoBehaviour
 
 
     private GameSettings m_gameSettings;
-
 
     private BoardController m_boardController;
 

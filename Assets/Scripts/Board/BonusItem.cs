@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BonusItem : Item
 {
+    public BonusItem(GameManager gameManager)
+    {
+        this.GameManager = gameManager;
+    }
     public enum eBonusType
     {
         NONE,
@@ -20,25 +25,26 @@ public class BonusItem : Item
         ItemType = type;
     }
 
-    protected override string GetPrefabName()
+    protected override Sprite GetPrefabSprite()
     {
-        string prefabname = string.Empty;
+        Sprite prefabSprite = null;
+        List<BonusObject> objt = this.GameManager.ScriptableObject.bonusObj;
         switch (ItemType)
         {
             case eBonusType.NONE:
                 break;
             case eBonusType.HORIZONTAL:
-                prefabname = Constants.PREFAB_BONUS_HORIZONTAL;
+                prefabSprite = objt.FirstOrDefault(o => o.name==("PREFAB_BONUS_HORIZONTAL")).sprite;
                 break;
             case eBonusType.VERTICAL:
-                prefabname = Constants.PREFAB_BONUS_VERTICAL;
+                prefabSprite = objt.FirstOrDefault(o => o.name == ("PREFAB_BONUS_VERTICAL")).sprite; 
                 break;
             case eBonusType.ALL:
-                prefabname = Constants.PREFAB_BONUS_BOMB;
+                prefabSprite = objt.FirstOrDefault(o => o.name == ("PREFAB_BONUS_BOMB")).sprite;
                 break;
         }
 
-        return prefabname;
+        return prefabSprite;
     }
 
     internal override bool IsSameType(Item other)

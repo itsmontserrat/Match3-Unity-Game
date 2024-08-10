@@ -11,6 +11,8 @@ public class UIMainManager : MonoBehaviour
 
     private GameManager m_gameManager;
 
+    private bool isTimer = false;
+
     private void Awake()
     {
         m_menuList = GetComponentsInChildren<IMenu>(true);
@@ -102,20 +104,39 @@ public class UIMainManager : MonoBehaviour
     internal void ShowPauseMenu()
     {
         m_gameManager.SetState(GameManager.eStateGame.PAUSE);
+
     }
 
     internal void LoadLevelMoves()
     {
         m_gameManager.LoadLevel(GameManager.eLevelMode.MOVES);
+        isTimer = false;
     }
 
     internal void LoadLevelTimer()
     {
         m_gameManager.LoadLevel(GameManager.eLevelMode.TIMER);
+        isTimer = true;
     }
 
     internal void ShowGameMenu()
     {
         m_gameManager.SetState(GameManager.eStateGame.GAME_STARTED);
+    }
+    internal void LoadLevelMode()
+    {
+        m_gameManager.isNormaal = !m_gameManager.isNormaal;
+    }
+    internal void RestartLevel()
+    { 
+        if (isTimer)
+        {
+            m_gameManager.LoadLevel(GameManager.eLevelMode.TIMER);
+
+        }
+        else
+        {
+            m_gameManager.LoadLevel(GameManager.eLevelMode.MOVES);
+        }
     }
 }

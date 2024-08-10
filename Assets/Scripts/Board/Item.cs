@@ -11,22 +11,24 @@ public class Item
 
     public Transform View { get; private set; }
 
+    public GameManager GameManager;
+
+    
 
     public virtual void SetView()
     {
-        string prefabname = GetPrefabName();
-
-        if (!string.IsNullOrEmpty(prefabname))
-        {
-            GameObject prefab = Resources.Load<GameObject>(prefabname);
+        Sprite prefabSprite = GetPrefabSprite();
+        
+            GameObject prefab = GameManager.ScriptableObject.prefab;
+            prefab.GetComponent<SpriteRenderer>().sprite = prefabSprite;
             if (prefab)
             {
                 View = GameObject.Instantiate(prefab).transform;
             }
-        }
+       
     }
 
-    protected virtual string GetPrefabName() { return string.Empty; }
+    protected virtual Sprite GetPrefabSprite() { return null; }
 
     public virtual void SetCell(Cell cell)
     {

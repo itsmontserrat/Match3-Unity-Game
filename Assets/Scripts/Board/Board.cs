@@ -25,7 +25,10 @@ public class Board
 
     private int m_matchMin;
 
-    public Board(Transform transform, GameSettings gameSettings)
+    private GameManager GameManager;
+
+
+    public Board(Transform transform, GameSettings gameSettings, GameManager gameManager)
     {
         m_root = transform;
 
@@ -35,7 +38,7 @@ public class Board
         this.boardSizeY = gameSettings.BoardSizeY;
 
         m_cells = new Cell[boardSizeX, boardSizeY];
-
+        GameManager = gameManager;
         CreateBoard();
     }
 
@@ -79,33 +82,61 @@ public class Board
             for (int y = 0; y < boardSizeY; y++)
             {
                 Cell cell = m_cells[x, y];
-                NormalItem item = new NormalItem();
-
-                List<NormalItem.eNormalType> types = new List<NormalItem.eNormalType>();
-                if (cell.NeighbourBottom != null)
+                if (GameManager.isNormaal)
                 {
-                    NormalItem nitem = cell.NeighbourBottom.Item as NormalItem;
-                    if (nitem != null)
-                    {
-                        types.Add(nitem.ItemType);
-                    }
-                }
+                    NormalItem item = new NormalItem(GameManager);
 
-                if (cell.NeighbourLeft != null)
+                    List<NormalItem.eNormalType> types = new List<NormalItem.eNormalType>();
+                    if (cell.NeighbourBottom != null)
+                    {
+                        NormalItem nitem = cell.NeighbourBottom.Item as NormalItem;
+                        if (nitem != null)
+                        {
+                            types.Add(nitem.ItemType);
+                        }
+                    }
+
+                    if (cell.NeighbourLeft != null)
+                    {
+                        NormalItem nitem = cell.NeighbourLeft.Item as NormalItem;
+                        if (nitem != null)
+                        {
+                            types.Add(nitem.ItemType);
+                        }
+                    }
+
+                    item.SetType(Utils.GetRandomNormalTypeExcept(types.ToArray()));
+                    item.SetView();
+                    item.SetViewRoot(m_root);
+                    cell.Assign(item);
+                    cell.ApplyItemPosition(false);
+                }
+                else
                 {
-                    NormalItem nitem = cell.NeighbourLeft.Item as NormalItem;
-                    if (nitem != null)
+                    FishItem item = new FishItem(GameManager);
+                    List<FishItem.eFishType> types = new List<FishItem.eFishType>();
+                    if (cell.NeighbourBottom != null)
                     {
-                        types.Add(nitem.ItemType);
+                        FishItem fitem = cell.NeighbourBottom.Item as FishItem;
+                        if (fitem != null)
+                        {
+                            types.Add(fitem.ItemType);
+                        }
                     }
+                    if (cell.NeighbourLeft != null)
+                    {
+                        FishItem fitem = cell.NeighbourLeft.Item as FishItem;
+                        if (fitem != null)
+                        {
+                            types.Add(fitem.ItemType);
+                        }
+                    }
+                    item.SetType(Utils.GetRandomFishTypeExcept(types.ToArray()));
+                    item.SetView();
+                    item.SetViewRoot(m_root);
+                    cell.Assign(item);
+                    cell.ApplyItemPosition(false);
                 }
-
-                item.SetType(Utils.GetRandomNormalTypeExcept(types.ToArray()));
-                item.SetView();
-                item.SetViewRoot(m_root);
-
-                cell.Assign(item);
-                cell.ApplyItemPosition(false);
             }
         }
     }
@@ -145,7 +176,7 @@ public class Board
                 Cell cell = m_cells[x, y];
                 if (!cell.IsEmpty) continue;
 
-                NormalItem item = new NormalItem();
+                NormalItem item = new NormalItem(GameManager);
 
                 item.SetType(Utils.GetRandomNormalType());
                 item.SetView();
@@ -260,7 +291,7 @@ public class Board
     {
         eMatchDirection dir = GetMatchDirection(matches);
 
-        BonusItem item = new BonusItem();
+        BonusItem item = new BonusItem(GameManager);
         switch (dir)
         {
             case eMatchDirection.ALL:
